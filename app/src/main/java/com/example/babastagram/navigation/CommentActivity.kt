@@ -50,10 +50,14 @@ class CommentActivity : AppCompatActivity() {
     }
 
     fun commentAlarm(destinationUid : String , message : String){
+
+        Log.d(TAG, "commentAlarm()")
+
         var alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userID = FirebaseAuth.getInstance().currentUser?.email
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind = 1
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message
         FirebaseFirestore.getInstance().collection("alarms")
@@ -65,6 +69,7 @@ class CommentActivity : AppCompatActivity() {
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
 
         init {
+            Log.d(TAG, "CommentRecyclerviewAdapter()")
             FirebaseFirestore.getInstance()
                 .collection("images")
                 .document(contentUid!!)
@@ -82,6 +87,7 @@ class CommentActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            Log.d(TAG, "onCreateViewHolder()")
             var view =
                 LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
             return CustomViewHolder(view)
@@ -91,11 +97,13 @@ class CommentActivity : AppCompatActivity() {
 
 
         override fun getItemCount(): Int {
+
             return comments.size
 
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            Log.d(TAG, "onBindViewHolder()")
             var view = holder.itemView
             view.comment_tv_comment.text = comments[position].comment
             view.comment_tv_profile.text = comments[position].userId
