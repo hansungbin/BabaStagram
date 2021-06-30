@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".navigation.AddPhotoActivity">
+
+    <LinearLayout
+        android:id="@+id/add_photo_logo"
+        android:layout_width="match_parent"
+        android:layout_height="35dp" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/logo_title" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/logo_division"
+        android:background="@color/colorDivision"
+        android:layout_below="@+id/add_photo_logo"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <ImageView
+        android:id="@+id/add_photo_image"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/logo_division"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+    <LinearLayout
+        android:id="@+id/layout_add_photo_explain"
+        android:layout_below="@id/logo_division"
+        android:layout_toRightOf="@+id/add_photo_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:gravity="top"
+            android:id="@+id/add_photo_explain"
+            android:hint="@string/hint_image_content"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/add_photo_btn"
+        android:text="@string/upload_image"
+        android:layout_toRightOf="@id/add_photo_image"
+        android:layout_below="@id/layout_add_photo_explain"
+        android:theme="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

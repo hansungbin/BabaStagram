@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "633455741660",
+    "project_id": "babastagram-5cfb9",
+    "storage_bucket": "babastagram-5cfb9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633455741660:android:a1165b44b2b30aaf348219",
+        "android_client_info": {
+          "package_name": "com.example.babastagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "633455741660-c84ufoljj231eo2hdt4see5hu3sfa5rl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPyrlyhYP82XNRofHDzyC38VRUsia140c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "633455741660-c84ufoljj231eo2hdt4see5hu3sfa5rl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
