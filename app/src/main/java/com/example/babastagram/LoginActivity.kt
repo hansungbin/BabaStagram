@@ -21,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
     var googleSignInClient : GoogleSignInClient? = null
     var GOOGLE_LOGIN_CODE = 9001
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
@@ -41,12 +42,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun googleLogin(){
+        Log.d(TAG, "googleLogin()")
         var signInIntent = googleSignInClient?.signInIntent
         startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d(TAG, "onActivityResult()")
         if(requestCode == GOOGLE_LOGIN_CODE) {
             var result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if(result!!.isSuccess){
@@ -60,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun firebaseAuthWithGoogle(account : GoogleSignInAccount? ) {
+        Log.d(TAG, "firebaseAuthWithGoogle()")
         var credential = GoogleAuthProvider.getCredential(account?.idToken, null)
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
@@ -78,11 +82,13 @@ class LoginActivity : AppCompatActivity() {
 
     //자동로그인기능
     override fun onStart() {
+        Log.d(TAG, "onStart()")
         super.onStart()
         moveMainPage(auth?.currentUser)
     }
 
     fun signinAndSignup(){
+        Log.d(TAG, "signinAndSignup()")
         auth?.createUserWithEmailAndPassword(edit_email.text.toString(), edit_password.text.toString())
             ?.addOnCompleteListener {
                 task ->
@@ -97,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun signinEmail() {
+        Log.d(TAG, "signinEmail()")
         auth?.signInWithEmailAndPassword(edit_email.text.toString(), edit_password.text.toString())
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -113,7 +120,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
-            Log.d(TAG, "moveMainPage 01 user!=null")
+            Log.d(TAG, "moveMainPage()")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

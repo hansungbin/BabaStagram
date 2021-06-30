@@ -20,9 +20,7 @@ import kotlinx.android.synthetic.main.fragment_grid.view.*
 class GridFragment : Fragment() {
     var firestore : FirebaseFirestore? = null
     var fragmentView : View? = null
-
-
-    var TAG: String? = "GridFragment.kt -- "
+    var TAG : String? = "로그 GridFragment - "
 
     override fun onCreateView(
         inflater: LayoutInflater,

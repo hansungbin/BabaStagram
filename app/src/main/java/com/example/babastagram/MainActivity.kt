@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
                 bundle.putString("destinationUid", uid)
                 userFragment.arguments = bundle
                 Log.d(TAG, "onNavigationItemSelected R.id.it_account 02")
+
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment).commit()
                 return true
 
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
         main_user.visibility = View.GONE
         main_img_back.visibility = View.GONE
         main_img_logo_title.visibility = View.VISIBLE
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

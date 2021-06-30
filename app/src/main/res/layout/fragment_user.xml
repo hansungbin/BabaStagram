@@ -6,14 +6,38 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="110dp">
 
         <ImageView
             android:id="@+id/account_iv_profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/ic_account" />
+
+        <TextView
+            android:id="@+id/account"
+            android:layout_above="@+id/account_layout"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_toRightOf="@+id/account_iv_profile"
+            android:layout_alignParentTop="true"
+            android:text="Account"
+            android:gravity="center"/>
+        <LinearLayout
+            android:id="@+id/toolbar_division"
+            android:background="@color/colorDivision"
+            android:orientation="horizontal"
+            android:layout_above="@+id/account_layout"
+            android:layout_toRightOf="@+id/account_iv_profile"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" >
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/account_btn_follow_signout"
@@ -23,10 +47,13 @@
             android:layout_toRightOf="@+id/account_iv_profile"
             android:text="follow" />
 
+
+
         <LinearLayout
+            android:id="@+id/account_layout"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_above="@+id/account_btn_follow_signout"
             android:layout_toRightOf="@+id/account_iv_profile">
 
@@ -86,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/count_0" />
             </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
