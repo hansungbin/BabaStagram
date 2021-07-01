@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.babastagram.R
 import com.example.babastagram.navigation.*
+import com.example.babastagram.navigation.util.FcmPush
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
 //        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
     }
 
+
+//    override fun onStop() {
+//        super.onStop()
+//        FcmPush.instance.sendMessage("IRKuwCeSIiWqZTe71aoXpqg4fWD3","babastagrm","Yo!")
+//    }
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Log.d(TAG,"onNavigationItemSelected 01")
 
