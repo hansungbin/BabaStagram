@@ -12,10 +12,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.babastagram.R
 import com.example.babastagram.navigation.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
 
         //Set default screen
         bottom_menu.selectedItemId = R.id.it_home
+        registerPushToken()
 //        var detailViewFragment = DetailViewFragment()
 //        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
     }
@@ -98,6 +101,45 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
         main_img_logo_title.visibility = View.VISIBLE
 
     }
+
+    fun registerPushToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            var token = task.result
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            var map = mutableMapOf<String, Any>()
+            map["pushToken"] = token!!
+
+            FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
+        })
+//        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener{
+//            task ->
+//            var token = task.result?.token
+//            val uid = FirebaseAuth.getInstance().currentUser?.uid
+//            var map = mutableMapOf<String, Any>()
+//            map["pushToken"] = token!!
+//
+//            FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
+//        }
+
+
+            // Get new FCM registration token
+//            val token = task.result
+
+
+
+            // Log and toast
+//            val msg = getString(R.string., token)
+//            Log.d(TAG, msg)
+//            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+
+    }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
