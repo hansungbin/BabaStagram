@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.babastagram.R
 import com.example.babastagram.navigation.menu.AlarmDTO
 import com.example.babastagram.navigation.menu.ContentDTO
+import com.example.babastagram.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -62,6 +63,9 @@ class CommentActivity : AppCompatActivity() {
         alarmDTO.message = message
         FirebaseFirestore.getInstance().collection("alarms")
             .document().set(alarmDTO)
+
+        var msg = FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_comment) + " of " +message
+        FcmPush.instance.sendMessage(destinationUid, "baba_stargram", msg)
 
     }
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
