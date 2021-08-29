@@ -1,5 +1,6 @@
 package com.example.babastagram.navigation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -66,15 +67,16 @@ class DetailViewFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             Log.d(TAG,"onCreateViewHolder 01")
-            var view = LayoutInflater.from(parent.context).inflate(R.layout.item_detail,parent,false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_detail,parent,false)
             return CustomViewHolder(view)
         }
 
         inner class CustomViewHolder(view : View) : RecyclerView.ViewHolder(view)
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             Log.d(TAG,"onBindViewHolder 01")
-            var viewholder = (holder as CustomViewHolder).itemView
+            val viewholder = (holder as CustomViewHolder).itemView
 
             //UserId
             viewholder.detailviewitem_profile_textview.text = contentDTOs!![position].userId
@@ -86,7 +88,7 @@ class DetailViewFragment : Fragment() {
             viewholder.detailviewitem_explain_textview.text = contentDTOs!![position].explain
 
             //likes
-            viewholder.detailView_favoritecounter_textview.text ="Likes "+ contentDTOs!![position].favoriteCount
+            viewholder.detailView_favoritecounter_textview.text ="Likes "+ contentDTOs[position].favoriteCount
 
             //This code is when the button is clicked
             viewholder.detailviewitem_favorite_imageview.setOnClickListener {
@@ -104,12 +106,8 @@ class DetailViewFragment : Fragment() {
 
             //This code is when the profile image is clicked
             viewholder.detailViewItem_profile_image.setOnClickListener {
-                Log.d(TAG,"onBindViewHolder 01  detailViewItem_profile_image 01")
-                var fragment = UserFragment()
-                var bundle = Bundle()
-
-                Log.d(TAG,"onBindViewHolder 02  contentDTOs[position].uid = " + contentDTOs[position].uid.toString())
-                Log.d(TAG,"onBindViewHolder 03  contentDTOs[position].userId = " +  contentDTOs[position].userId.toString())
+                val fragment = UserFragment()
+                val bundle = Bundle()
 
                 bundle.putString("destinationUid" , contentDTOs[position].uid)
                 bundle.putString("userId", contentDTOs[position].userId)
@@ -133,7 +131,7 @@ class DetailViewFragment : Fragment() {
         }
 
         fun favoriteEvent(position: Int){
-            Log.d(TAG,"favoriteEvent 01")
+
             var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
             firestore?.runTransaction { transition ->
 

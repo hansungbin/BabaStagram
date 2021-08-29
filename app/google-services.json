@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "633455741660",
-    "project_id": "babastagram-5cfb9",
-    "storage_bucket": "babastagram-5cfb9.appspot.com"
+    "project_number": "841506733761",
+    "project_id": "babastagram-41fd5",
+    "storage_bucket": "babastagram-41fd5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:633455741660:android:a1165b44b2b30aaf348219",
+        "mobilesdk_app_id": "1:841506733761:android:5790a933763838511a5e40",
         "android_client_info": {
           "package_name": "com.example.babastagram"
         }
       },
       "oauth_client": [
         {
-          "client_id": "633455741660-c84ufoljj231eo2hdt4see5hu3sfa5rl.apps.googleusercontent.com",
+          "client_id": "841506733761-dvn2tq6l0hud4ptdd0rqb59laq3t011k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.babastagram",
+            "certificate_hash": "66d8a3dc10f3d5acd3cdb3dd61a655d1c021abb0"
+          }
+        },
+        {
+          "client_id": "841506733761-lh6mjjehhlveljdmgcdkelb7rn25llqq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCPyrlyhYP82XNRofHDzyC38VRUsia140c"
+          "current_key": "AIzaSyAdKNtKJwPtky0k2i9ROuzdYmL3KKk_-fo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "633455741660-c84ufoljj231eo2hdt4see5hu3sfa5rl.apps.googleusercontent.com",
+              "client_id": "841506733761-lh6mjjehhlveljdmgcdkelb7rn25llqq.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
