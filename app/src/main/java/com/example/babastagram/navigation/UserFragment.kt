@@ -1,5 +1,6 @@
 package com.example.babastagram.navigation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.opengl.Visibility
@@ -117,23 +118,35 @@ class UserFragment : Fragment() {
         //Save data to my account
         var tsDocFollowing = firestore?.collection("users")?.document(currentUserUid!!)
         firestore?.runTransaction { transaction ->
+
+            // followings : 팔로잉 하고 있는 사람 목록
             var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java)
+            Log.d(TAG, "requestFollow() -  followDTO.toString() =" + followDTO.toString())
+
+
+            // 팔로잉한 사람이 아무도 없을때 following 카운트에 한명을 늘리고 자신을 follower에 넣는다.
             if (followDTO == null) {
+                Log.d(TAG, "requestFollow() 01 (followDTO == null)-  followDTO =" + followDTO.toString())
                 followDTO = FollowDTO()
                 followDTO!!.followingCount = 1
-                followDTO!!.followers[uid!!] = true
+                // 상대방을 넣는다.
+                followDTO!!.followings[uid!!] = true
                 followerAlarm(uid!!)
-
+                Log.d(TAG, "requestFollow() 02 (followDTO == null)-  followDTO =" + followDTO.toString())
                 transaction.set(tsDocFollowing, followDTO)
                 return@runTransaction
             }
 
+            // followDTO 안에 값이 있을 경우 들어온 uid 와 비교를 한다.
+            // 내가 follow를 한 상태에서 following 취소
             if (followDTO.followings.containsKey(uid)){
+                Log.d(TAG, "requestFollow() 03  (followDTO.followings.containsKey(uid))-  followDTO =" + followDTO.toString())
                 //It remove following third person when a third person follow me
                 followDTO?.followingCount = followDTO?.followingCount -1
                 followDTO?.followings?.remove(uid)
-
             }else {
+                // following 을 하면 됨
+                Log.d(TAG, "requestFollow() 04 else (followDTO.followings.containsKey(uid))-  followDTO =" + followDTO.toString())
                 //It add following  third person when a third person do not follow me
                 followDTO?.followingCount = followDTO?.followingCount + 1
                 followDTO?.followings[uid!!] = true
@@ -141,33 +154,35 @@ class UserFragment : Fragment() {
             transaction.set(tsDocFollowing,followDTO)
             return@runTransaction
         }
-        //Save data to third person
-//        var tsDocFollower = firestore?.collection("users")?.document(uid!!)
-//        firestore?.runTransaction { transaction ->
-//            var followDTO = transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)
-//            if (followDTO == null) {
-//                followDTO = FollowDTO()
-//                followDTO!!.followerCount = 1
-//                followDTO!!.followers[currentUserUid!!] = true
-//
-//                transaction.set(tsDocFollower, followDTO!!)
-//                return@runTransaction
-//            }
-//
-//            if(followDTO!!.followers.containsKey(currentUserUid)){
-//                //It cancel my follower when I follow a third person
-//                followDTO!!.followerCount = followDTO!!.followerCount - 1
-//                followDTO!!.followers.remove(currentUserUid!!)
-//            }else {
-//                //It add my follower when I don't follow a third person
-//                followDTO!!.followerCount = followDTO!!.followerCount + 1
-//                followDTO!!.followers[currentUserUid!!] = true
-//            }
-//            transaction.set(tsDocFollowing!!, followDTO!!)
-//            return@runTransaction
-//        }
+
+        //Save data to third person 상대방 계정에 보이는 화면
+        var tsDocFollower = firestore?.collection("users")?.document(uid!!)
+        firestore?.runTransaction { transaction ->
+            var followDTO = transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)
+            if (followDTO == null) {
+                followDTO = FollowDTO()
+                followDTO!!.followerCount = 1
+                followDTO!!.followers[currentUserUid!!] = true
+
+                transaction.set(tsDocFollower, followDTO!!)
+                return@runTransaction
+            }
+
+            if(followDTO!!.followers.containsKey(currentUserUid)){
+                //It cancel my follower when I follow a third person
+                followDTO!!.followerCount = followDTO!!.followerCount - 1
+                followDTO!!.followers.remove(currentUserUid!!)
+            }else {
+                //It add my follower when I don't follow a third person
+                followDTO!!.followerCount = followDTO!!.followerCount + 1
+                followDTO!!.followers[currentUserUid!!] = true
+            }
+            transaction.set(tsDocFollower!!, followDTO!!)
+            return@runTransaction
+        }
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     fun getFollowerAndFollowing(){
         firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if (documentSnapshot == null) return@addSnapshotListener
@@ -175,12 +190,11 @@ class UserFragment : Fragment() {
             if (followDTO?.followingCount != null) {
                 fragmentView?.account_tv_following_count?.text = followDTO.followingCount?.toString()
             }
-
             if (followDTO?.followerCount != null){
                 fragmentView?.account_tv_follower_count?.text = followDTO?.followerCount?.toString()
                 if (followDTO?.followers?.containsKey(currentUserUid!!)){
-                    fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow_cancel)
-                    fragmentView?.account_btn_follow_signout?.background?.setColorFilter(ContextCompat.getColor(requireActivity(),R.color.colorLightGray),PorterDuff.Mode.MULTIPLY)
+                    fragmentView?.account_btn_follow_signout?.text =  getString(R.string.follow_cancel)
+                    fragmentView?.account_btn_follow_signout?.background?.setColorFilter(ContextCompat.getColor(activity!!,R.color.colorLightGray),PorterDuff.Mode.MULTIPLY)
                 }else {
                     if (uid != currentUserUid){
                         fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
@@ -266,4 +280,5 @@ class UserFragment : Fragment() {
                 .apply(RequestOptions().centerCrop()).into(imageview)
         }
     }
+
 }
