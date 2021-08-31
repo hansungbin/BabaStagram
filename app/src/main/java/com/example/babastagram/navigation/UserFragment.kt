@@ -53,49 +53,41 @@ class UserFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         currentUserUid =auth?.currentUser?.uid
 
-        Log.d(TAG, "onCreateView fragmentView = " + fragmentView.toString())
-        Log.d(TAG, "onCreateView uid = " + uid.toString())
-        Log.d(TAG, "onCreateView firestore = " + firestore.toString())
-        Log.d(TAG, "onCreateView auth = " + auth.toString())
-        Log.d(TAG,"onCreateView 02 uid = $uid + currentUserUid = $currentUserUid")
+//        Log.d(TAG, "onCreateView fragmentView = " + fragmentView.toString())
+//        Log.d(TAG, "onCreateView uid = " + uid.toString())
+//        Log.d(TAG, "onCreateView firestore = " + firestore.toString())
+//        Log.d(TAG, "onCreateView auth = " + auth.toString())
+//        Log.d(TAG,"onCreateView 02 uid = $uid + currentUserUid = $currentUserUid")
 
-        if (uid == currentUserUid) {
+        val unit = if (uid == currentUserUid) {
             //MyPage
-            Log.d(TAG, "onCreateView 03")
-
             fragmentView?.account_btn_follow_signout?.text = getString(R.string.signout)
-
             fragmentView?.account_btn_follow_signout?.setOnClickListener {
                 activity?.finish()
                 startActivity(Intent(activity, LoginActivity::class.java))
-                Log.d(TAG, "onCreateView 04")
                 auth?.signOut()
-                Log.d(TAG, "onCreateView 05")
             }
 
         } else {
-            Log.d(TAG, "onCreateView 06")
             //OtherUserPage
             fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
 
             val mainActivity = (activity as MainActivity)
             mainActivity.main_user?.text = arguments?.getString("userId")
             mainActivity.main_img_back?.setOnClickListener {
-                Log.d(TAG, "onCreateView 07")
                 mainActivity.bottom_menu.selectedItemId = R.id.it_home
             }
-            Log.d(TAG, "onCreateView 08")
+
             mainActivity.main_img_logo_title?.visibility = View.GONE
             mainActivity.main_user?.visibility = View.VISIBLE
             mainActivity.main_img_back?.visibility = View.VISIBLE
-            Log.d(TAG, "onCreateView 09")
 
             fragmentView?.account_btn_follow_signout?.setOnClickListener {
                 requestFollow()
             }
         }
 
-        Log.d(TAG, "onCreateView 10")
+
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerview?.layoutManager = GridLayoutManager(requireActivity(), 3)
 
@@ -152,7 +144,7 @@ class UserFragment : Fragment() {
                 )
                 //It add following  third person when a third person do not follow me
                 followDTO.followingCount = followDTO.followingCount + 1
-                followDTO?.followings[uid!!] = true
+                followDTO.followings[uid!!] = true
             }
             transaction.set(tsDocFollowing,followDTO)
             return@runTransaction
@@ -180,7 +172,7 @@ class UserFragment : Fragment() {
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
             }
-            transaction.set(tsDocFollower!!, followDTO!!)
+            transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
         }
     }
@@ -189,7 +181,7 @@ class UserFragment : Fragment() {
     fun getFollowerAndFollowing(){
         firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if (documentSnapshot == null) return@addSnapshotListener
-            var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+            val followDTO = documentSnapshot.toObject(FollowDTO::class.java)
             if (followDTO?.followingCount != null) {
                 fragmentView?.account_tv_following_count?.text = followDTO.followingCount.toString()
             }
@@ -233,7 +225,7 @@ class UserFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
+        private var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
             Log.d(TAG, "UserFragmentRecyclerViewAdapter 01")

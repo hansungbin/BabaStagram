@@ -31,7 +31,7 @@ class DetailViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreate()")
-        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail,container, false)
+        val view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail,container, false)
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
 
