@@ -1,5 +1,6 @@
 package com.example.babastagram.navigation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,6 +37,7 @@ class GridFragment : Fragment() {
         return fragmentView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
@@ -59,8 +61,8 @@ class GridFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             Log.d(TAG, "onCreateViewHolder 01")
-            var width = resources.displayMetrics.widthPixels / 3
-            var imageview = ImageView(parent.context)
+            val width = resources.displayMetrics.widthPixels / 3
+            val imageview = ImageView(parent.context)
             Log.d(TAG, "onCreateViewHolder 02")
             imageview.layoutParams = LinearLayoutCompat.LayoutParams(width, width)
             return CustomViewHolder(imageview)
@@ -78,7 +80,7 @@ class GridFragment : Fragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             Log.d(TAG, "onBindViewHolder 01")
-            var imageview = (holder as CustomViewHolder).imageview
+            val imageview = (holder as CustomViewHolder).imageview
             Glide.with(holder.itemView.context).load(contentDTOs[position].imageUrl)
                 .apply(RequestOptions().centerCrop()).into(imageview)
         }

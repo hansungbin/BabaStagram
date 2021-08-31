@@ -1,5 +1,6 @@
 package com.example.babastagram.navigation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,7 @@ class AlarmFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_alarm, container, false)
+        val view = LayoutInflater.from(activity).inflate(R.layout.fragment_alarm, container, false)
 
         view.alarmfragment_recyclerview.adapter = AlarmRecyclerviewAdapter()
         view.alarmfragment_recyclerview.layoutManager = LinearLayoutManager(activity)
@@ -31,6 +32,7 @@ class AlarmFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     inner class AlarmRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var alarmDTOList: ArrayList<AlarmDTO> = arrayListOf()
 
@@ -51,7 +53,7 @@ class AlarmFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            var view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
             return CustomViewHolder(view)
         }
 
@@ -62,7 +64,7 @@ class AlarmFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            var view = holder.itemView
+            val view = holder.itemView
 
             FirebaseFirestore.getInstance().collection("profileImages").document(alarmDTOList[position].uid!!).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -73,16 +75,16 @@ class AlarmFragment : Fragment() {
 
             when (alarmDTOList[position].kind) {
                 0 -> {
-                    val str_0 = alarmDTOList[position].userID + getString(R.string.alarm_favorite)
-                    view.comment_tv_comment.text = str_0
+                    val str0 = alarmDTOList[position].userID + getString(R.string.alarm_favorite)
+                    view.comment_tv_comment.text = str0
                 }
                 1 -> {
-                    val str_0 = alarmDTOList[position].userID + " " + getString(R.string.alarm_comment) + " of " + alarmDTOList[position].message
-                    view.comment_tv_profile.text = str_0
+                    val str0 = alarmDTOList[position].userID + " " + getString(R.string.alarm_comment) + " of " + alarmDTOList[position].message
+                    view.comment_tv_profile.text = str0
                 }
                 2 -> {
-                    val str_0 = alarmDTOList[position].userID + getString(R.string.alarm_follow)
-                    view.comment_tv_profile.text = str_0
+                    val str0 = alarmDTOList[position].userID + getString(R.string.alarm_follow)
+                    view.comment_tv_profile.text = str0
                 }
             }
 

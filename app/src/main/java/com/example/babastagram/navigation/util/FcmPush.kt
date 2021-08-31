@@ -32,29 +32,29 @@ class FcmPush {
         FirebaseFirestore.getInstance().collection("pushtokens").document(destinationUid).get().addOnCompleteListener {
             task ->
             if(task.isSuccessful){
-                var token = task?.result?.get("pushToken").toString()
+                val token = task?.result?.get("pushToken").toString()
 
-                var pushDTO = PushDTO()
+                val pushDTO = PushDTO()
                 pushDTO.to = token
                 pushDTO.notification.title =title
                 pushDTO.notification.body = message
 
-                var body = gson?.toJson(pushDTO)!!.toRequestBody(JSON)
-                var request = Request.Builder()
+                val body = gson?.toJson(pushDTO)!!.toRequestBody(JSON)
+                val request = Request.Builder()
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "key=" + serverKey)
+                    .addHeader("Authorization", "key=$serverKey")
                     .url(url)
                     .post(body)
                     .build()
 
-                Log.d(TAG, "request = " + request.toString())
+                Log.d(TAG, "request = $request")
                 okHttpClient?.newCall(request)?.enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        Log.d(TAG,"onFailure 01 call = " +call.toString() +"   exception = "+ e.toString())
+                        Log.d(TAG, "onFailure 01 call = $call   exception = $e")
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        Log.d(TAG,"onResponse 01 call = " +call.toString() +"   response = "+ response.toString())
+                        Log.d(TAG, "onResponse 01 call = $call   response = $response")
                         println(response.body?.string())
                     }
 

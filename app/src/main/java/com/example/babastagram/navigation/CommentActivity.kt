@@ -1,5 +1,6 @@
 package com.example.babastagram.navigation
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -35,7 +36,7 @@ class CommentActivity : AppCompatActivity() {
         comment_recyclerview.layoutManager = LinearLayoutManager(this)
 
         comment_btn_send?.setOnClickListener {
-            var comment = ContentDTO.Comment()
+            val comment = ContentDTO.Comment()
             comment.userId = FirebaseAuth.getInstance().currentUser?.email
             comment.uid = FirebaseAuth.getInstance().currentUser?.uid
             comment.comment = comment_et_comment.text.toString()
@@ -50,11 +51,11 @@ class CommentActivity : AppCompatActivity() {
         }
     }
 
-    fun commentAlarm(destinationUid : String , message : String){
+    private fun commentAlarm(destinationUid : String, message : String){
 
         Log.d(TAG, "commentAlarm()")
 
-        var alarmDTO = AlarmDTO()
+        val alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userID = FirebaseAuth.getInstance().currentUser?.email
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -64,10 +65,11 @@ class CommentActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("alarms")
             .document().set(alarmDTO)
 
-        var msg = FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_comment) + " of " +message
+        val msg = FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_comment) + " of " +message
         FcmPush.instance.sendMessage(destinationUid, "baba_stargram", msg)
 
     }
+    @SuppressLint("NotifyDataSetChanged")
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
@@ -83,7 +85,7 @@ class CommentActivity : AppCompatActivity() {
                     comments.clear()
                     if (querySnapshot == null) return@addSnapshotListener
 
-                    for (snaphot in querySnapshot.documents!!) {
+                    for (snaphot in querySnapshot.documents) {
                         comments.add(snaphot.toObject(ContentDTO.Comment::class.java)!!)
                     }
                     notifyDataSetChanged()
@@ -92,7 +94,7 @@ class CommentActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             Log.d(TAG, "onCreateViewHolder()")
-            var view =
+            val view =
                 LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
             return CustomViewHolder(view)
         }
@@ -108,7 +110,7 @@ class CommentActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             Log.d(TAG, "onBindViewHolder()")
-            var view = holder.itemView
+            val view = holder.itemView
             view.comment_tv_comment.text = comments[position].comment
             view.comment_tv_profile.text = comments[position].userId
 
@@ -118,7 +120,7 @@ class CommentActivity : AppCompatActivity() {
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
-                        var url = task.result!!["image"]
+                        val url = task.result!!["image"]
                         Glide.with(holder.itemView.context).load(url).apply(RequestOptions().circleCrop()).into(view.comment_img_profile)
                     }
                 }

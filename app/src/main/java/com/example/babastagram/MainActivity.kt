@@ -53,12 +53,12 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
 
         when(item.itemId){
             R.id.it_home ->{
-                var detailViewFragment = DetailViewFragment()
+                val detailViewFragment = DetailViewFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                 return true
             }
             R.id.it_search ->{
-                var gridFragment = GridFragment()
+                val gridFragment = GridFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, gridFragment).commit()
                 return true
             }
@@ -73,16 +73,16 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
                 return true
             }
             R.id.it_alarm ->{
-                var alarmFragment = AlarmFragment()
+                val alarmFragment = AlarmFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, alarmFragment).commit()
                 return true
             }
             R.id.it_account ->{
 
                 Log.d(TAG, "onNavigationItemSelected R.id.it_account 01")
-                var userFragment = UserFragment()
-                var bundle = Bundle()
-                var uid = FirebaseAuth.getInstance().currentUser?.uid
+                val userFragment = UserFragment()
+                val bundle = Bundle()
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
 
                 bundle.putString("destinationUid", uid)
                 userFragment.arguments = bundle
@@ -90,34 +90,28 @@ class MainActivity : AppCompatActivity() , BottomNavigationView.OnNavigationItem
 
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment).commit()
                 return true
-
-
-                Log.d(TAG,"onNavigationItemSelected it_account")
-//                var userFragment = UserFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment).commit()
-                return true
             }
         }
         return false
     }
 
-    fun setToolbarDefault(){
+    private fun setToolbarDefault(){
         main_user.visibility = View.GONE
         main_img_back.visibility = View.GONE
         main_img_logo_title.visibility = View.VISIBLE
 
     }
 
-    fun registerPushToken(){
+    private fun registerPushToken(){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
 
-            var token = task.result
+            val token = task.result
             val uid = FirebaseAuth.getInstance().currentUser?.uid
-            var map = mutableMapOf<String, Any>()
+            val map = mutableMapOf<String, Any>()
             map["pushToken"] = token!!
 
             FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)

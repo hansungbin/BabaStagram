@@ -44,6 +44,7 @@ class DetailViewFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     inner class DetailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
         var contentUidList : ArrayList<String> = arrayListOf()
@@ -76,36 +77,36 @@ class DetailViewFragment : Fragment() {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             Log.d(TAG,"onBindViewHolder 01")
-            val viewholder = (holder as CustomViewHolder).itemView
+            val viewHolder = (holder as CustomViewHolder).itemView
 
             //UserId
-            viewholder.detailviewitem_profile_textview.text = contentDTOs!![position].userId
+            viewHolder.detailviewitem_profile_textview.text = contentDTOs[position].userId
 
             //Image
-            Glide.with(holder.itemView.context).load(contentDTOs!![position].imageUrl).into(viewholder.detailView_image_content)
+            Glide.with(holder.itemView.context).load(contentDTOs[position].imageUrl).into(viewHolder.detailView_image_content)
 
             //Explain of content
-            viewholder.detailviewitem_explain_textview.text = contentDTOs!![position].explain
+            viewHolder.detailviewitem_explain_textview.text = contentDTOs[position].explain
 
             //likes
-            viewholder.detailView_favoritecounter_textview.text ="Likes "+ contentDTOs[position].favoriteCount
+            viewHolder.detailView_favoritecounter_textview.text ="Likes "+ contentDTOs[position].favoriteCount
 
             //This code is when the button is clicked
-            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
+            viewHolder.detailviewitem_favorite_imageview.setOnClickListener {
                 favoriteEvent(position)
             }
 
             //This code is when the page is loaded
-            if (contentDTOs!![position].favorites.containsKey(uid)){
+            if (contentDTOs[position].favorites.containsKey(uid)){
                 //This is like status
-                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
             }else {
                 //This is unlike status
-                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
             }
 
             //This code is when the profile image is clicked
-            viewholder.detailViewItem_profile_image.setOnClickListener {
+            viewHolder.detailViewItem_profile_image.setOnClickListener {
                 val fragment = UserFragment()
                 val bundle = Bundle()
 
@@ -116,8 +117,8 @@ class DetailViewFragment : Fragment() {
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
             }
 
-            viewholder.detailViewItem_comment_imageview.setOnClickListener { v ->
-                var intent = Intent(v.context, CommentActivity::class.java)
+            viewHolder.detailViewItem_comment_imageview.setOnClickListener { v ->
+                val intent = Intent(v.context, CommentActivity::class.java)
                 intent.putExtra("contentUid", contentUidList[position])
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
@@ -130,21 +131,21 @@ class DetailViewFragment : Fragment() {
             return contentDTOs.size
         }
 
-        fun favoriteEvent(position: Int){
+        private fun favoriteEvent(position: Int){
 
-            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
             firestore?.runTransaction { transition ->
 
-                var contentDTO = transition.get(tsDoc!!).toObject(ContentDTO::class.java)
+                val contentDTO = transition.get(tsDoc!!).toObject(ContentDTO::class.java)
 
                 if (contentDTO!!.favorites.containsKey(uid)){
                     //When the button is clicked
-                    contentDTO?.favoriteCount = contentDTO?.favoriteCount -1
-                    contentDTO?.favorites.remove(uid)
+                    contentDTO.favoriteCount = contentDTO.favoriteCount -1
+                    contentDTO.favorites.remove(uid)
                 }else {
                     //When the button is not clicked
-                    contentDTO?.favoriteCount = contentDTO?.favoriteCount +1
-                    contentDTO?.favorites[uid!!] = true
+                    contentDTO.favoriteCount = contentDTO.favoriteCount +1
+                    contentDTO.favorites[uid!!] = true
                     favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transition.set(tsDoc, contentDTO)
@@ -153,7 +154,7 @@ class DetailViewFragment : Fragment() {
         }
 
         fun favoriteAlarm(destinationUid : String) {
-            var alarmDTO = AlarmDTO()
+            val alarmDTO = AlarmDTO()
             alarmDTO.destinationUid = destinationUid
             alarmDTO.userID = FirebaseAuth.getInstance().currentUser?.email
             alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -161,7 +162,7 @@ class DetailViewFragment : Fragment() {
             alarmDTO.timestamp = System.currentTimeMillis()
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-            var message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+            val message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
             FcmPush.instance.sendMessage(destinationUid, "baba_stargram", message)
         }
 

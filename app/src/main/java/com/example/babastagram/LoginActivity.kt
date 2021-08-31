@@ -19,21 +19,21 @@ class LoginActivity : AppCompatActivity() {
     var TAG : String? = "로그 LoginActivity - "
     var auth : FirebaseAuth? = null
     var googleSignInClient : GoogleSignInClient? = null
-    var GOOGLE_LOGIN_CODE = 9001
+    private var GOOGLE_LOGIN_CODE = 9001
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
         btn_email_login.setOnClickListener {
-            signinAndSignup()
+            signInAndSignup()
         }
 
         btn_google_login.setOnClickListener{
             googleLogin()
         }
 
-        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("633455741660-c84ufoljj231eo2hdt4see5hu3sfa5rl.apps.googleusercontent.com")
             .requestEmail()
             .build()
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun googleLogin(){
         Log.d(TAG, "googleLogin()")
-        var signInIntent = googleSignInClient?.signInIntent
+        val signInIntent = googleSignInClient?.signInIntent
         startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
     }
 
@@ -51,10 +51,10 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d(TAG, "onActivityResult()")
         if(requestCode == GOOGLE_LOGIN_CODE) {
-            var result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if(result!!.isSuccess){
                 Log.d(TAG,"onActivityResult 01 result!!.isSuccess")
-                var account = result.signInAccount
+                val account = result.signInAccount
                 //Second step
                 firebaseAuthWithGoogle(account)
 
@@ -62,9 +62,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun firebaseAuthWithGoogle(account : GoogleSignInAccount? ) {
+    private fun firebaseAuthWithGoogle(account : GoogleSignInAccount? ) {
         Log.d(TAG, "firebaseAuthWithGoogle()")
-        var credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -87,8 +87,8 @@ class LoginActivity : AppCompatActivity() {
         moveMainPage(auth?.currentUser)
     }
 
-    fun signinAndSignup(){
-        Log.d(TAG, "signinAndSignup()")
+    private fun signInAndSignup(){
+        Log.d(TAG, "signInAndSignup()")
         auth?.createUserWithEmailAndPassword(edit_email.text.toString(), edit_password.text.toString())
             ?.addOnCompleteListener {
                 task ->
@@ -97,13 +97,13 @@ class LoginActivity : AppCompatActivity() {
                     moveMainPage(task.result?.user)
                 }else {
                     //Login if you have account
-                    signinEmail()
+                    signInEmail()
                 }
             }
     }
 
-    fun signinEmail() {
-        Log.d(TAG, "signinEmail()")
+    private fun signInEmail() {
+        Log.d(TAG, "signInEmail()")
         auth?.signInWithEmailAndPassword(edit_email.text.toString(), edit_password.text.toString())
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -118,7 +118,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun moveMainPage(user: FirebaseUser?) {
+    private fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
             Log.d(TAG, "moveMainPage()")
             startActivity(Intent(this, MainActivity::class.java))
