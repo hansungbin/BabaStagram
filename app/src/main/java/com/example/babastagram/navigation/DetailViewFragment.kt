@@ -46,8 +46,8 @@ class DetailViewFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     inner class DetailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
-        var contentUidList : ArrayList<String> = arrayListOf()
+        private var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
+        private var contentUidList : ArrayList<String> = arrayListOf()
 
         init {
             Log.d(TAG,"DetailViewRecyclerViewAdapter 01")
@@ -56,8 +56,8 @@ class DetailViewFragment : Fragment() {
                 contentUidList.clear()
                 if(querySnapshot == null) return@addSnapshotListener
 
-                for (snapshot in querySnapshot!!.documents){
-                    var item = snapshot.toObject(ContentDTO::class.java)
+                for (snapshot in querySnapshot.documents){
+                    val item = snapshot.toObject(ContentDTO::class.java)
                     contentDTOs.add(item!!)
                     contentUidList.add(snapshot.id)
                 }
@@ -153,7 +153,7 @@ class DetailViewFragment : Fragment() {
 
         }
 
-        fun favoriteAlarm(destinationUid : String) {
+        private fun favoriteAlarm(destinationUid : String) {
             val alarmDTO = AlarmDTO()
             alarmDTO.destinationUid = destinationUid
             alarmDTO.userID = FirebaseAuth.getInstance().currentUser?.email
@@ -162,7 +162,7 @@ class DetailViewFragment : Fragment() {
             alarmDTO.timestamp = System.currentTimeMillis()
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-            val message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+            val message = FirebaseAuth.getInstance().currentUser?.email + getString(R.string.alarm_favorite)
             FcmPush.instance.sendMessage(destinationUid, "baba_stargram", message)
         }
 
